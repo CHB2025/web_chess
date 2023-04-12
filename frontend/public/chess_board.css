@@ -1,5 +1,4 @@
 .chess-board {
-    background-color: skyblue;
     display: flex;
     flex-flow: row-reverse wrap;
     max-width: 800px;
@@ -13,7 +12,9 @@
     background-color: lightgray;
     aspect-ratio: 1;
     width: 12.5%;
-    border: 1px solid black;
+}
+.square.dark {
+    background-color: gray;
 }
 
 .piece {
