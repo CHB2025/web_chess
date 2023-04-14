@@ -3,6 +3,14 @@ name = "server"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+axum = { version = "0.6.15", features = ["ws"] }
+leptos = { version = "0.2.5", features = ["ssr"] }
+leptos_axum = "0.2.5"
+leptos_router = { version = "0.2.5", features = ["ssr"] }
+frontend = { path = "../frontend" }
+serde = "1.0"
+tokio = { version = "1.27.0", features = ["full"] }
+tower = "0.4.13"
+tower-http = { version = "0.4.0", features = ["fs"] }
+leptos_meta = { version = "0.2.5", features = ["ssr"] }

@@ -1,21 +1,13 @@
-use chb_chess::{Board, Color};
-use leptos::{
-    component, create_signal, ev::MouseEvent, event_target_value, mount_to_body, provide_context,
-    view, IntoView, Scope, Signal,
-};
-
-use chess_board::{ChessBoard, ChessBoardProps};
+use chb_chess::Color;
+use leptos::{component, create_signal, event_target_value, view, IntoView, Scope, Signal};
 use web_sys::Event;
 
-mod chess_board;
+use crate::board_provider::create_local_board;
+use crate::chess_board::{ChessBoard, ChessBoardProps};
 
 #[component]
-pub fn App(cx: Scope) -> impl IntoView {
-    let (board, set_board) = create_signal(cx, Board::default());
-    let (mouse, set_mouse) = create_signal(cx, (0, 0));
-    provide_context(cx, mouse);
-    let mouse_move = move |e: MouseEvent| set_mouse((e.client_x(), e.client_y()));
-
+pub fn Play(cx: Scope) -> impl IntoView {
+    let (board, make_move) = create_local_board(cx);
     let (play_as, set_play_as) = create_signal(cx, Some(Color::White));
     let view_as = Signal::derive(cx, move || play_as().unwrap_or(Color::White));
     let change_player = move |e: Event| {
@@ -25,10 +17,10 @@ pub fn App(cx: Scope) -> impl IntoView {
 
     view! {
         cx,
-        <div class="main" on:mousemove=mouse_move>
+        <>
             <ChessBoard
                 board=board
-                set_board=set_board
+                make_move=make_move
                 play_as=play_as
                 view_as=view_as
             />
@@ -64,16 +56,12 @@ pub fn App(cx: Scope) -> impl IntoView {
                             name="play_as"
                             value="-"
                             on:change=change_player
-                            prop:checked=move || play_as() == None
+                            prop:checked=move || play_as().is_none()
                         />
                         <label for="play-as-none">"Spectate"</label>
                     </div>
                 </fieldset>
             </div>
-        </div>
+        </>
     }
-}
-
-pub fn main() {
-    mount_to_body(|cx| view! { cx, <App/> })
 }

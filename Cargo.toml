@@ -4,3 +4,10 @@ members = [
     "frontend",
     "server",
 ]
+
+[[workspace.metadata.leptos]]
+name = "web_chess"
+bin-package = "server"
+lib-package = "frontend"
+assets-dir = "assets"
+style-file = "assets/index.scss"

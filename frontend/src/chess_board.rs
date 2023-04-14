@@ -9,7 +9,7 @@ mod piece;
 pub fn ChessBoard(
     cx: Scope,
     #[prop(into)] board: Signal<Board>,
-    #[prop(into)] set_board: WriteSignal<Board>,
+    #[prop(into)] make_move: SignalSetter<Move>,
     #[prop(into)] view_as: MaybeSignal<Color>,
     #[prop(into)] play_as: MaybeSignal<Option<Color>>,
 ) -> impl IntoView {
@@ -31,13 +31,6 @@ pub fn ChessBoard(
             list.reverse();
         }
         list
-    };
-
-    let make_move = move |mv: Move| {
-        set_board.update(|b| match b.make(mv) {
-            Ok(_) => log!("Move made successfully"),
-            Err(e) => log!("{}", e),
-        })
     };
 
     view! {

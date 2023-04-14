@@ -3,10 +3,27 @@ name = "frontend"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 chb_chess = {git = "https://github.com/CHB2025/chess.git", tag = "v0.1.1"}
 leptos = "0.2.5"
-web-sys = { version = "0.3.61", features = ["HtmlDivElement"] }
+leptos_router = { version = "0.2.5", features = ["hydrate"] }
+wasm-bindgen = "0.2"
+js-sys = "0.3"
+tracing = "0.1.37"
+leptos_meta = { version = "0.2.5", features = ["hydrate"] }
 
+[dependencies.web-sys]
+version = "0.3.61"
+features = [
+    "HtmlDivElement",
+    "BinaryType",
+    "Blob",
+    "ErrorEvent",
+    "FileReader",
+    "MessageEvent",
+    "ProgressEvent",
+    "WebSocket",
+]
