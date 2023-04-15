@@ -1,8 +1,5 @@
 use chb_chess::Color;
-use leptos::{
-    component, create_signal, event_target_value, view, IntoView, Scope, Signal, Suspense,
-    SuspenseProps,
-};
+use leptos::{component, create_signal, event_target_value, view, IntoView, Scope, Signal};
 use web_sys::Event;
 
 use crate::board_provider::create_server_board;

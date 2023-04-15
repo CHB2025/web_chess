@@ -1,4 +1,4 @@
-use chb_chess::{Board, Color, Move, Piece, Square};
+use chb_chess::{Board, Color, Move, Square};
 use leptos::*;
 
 use piece::{PieceDisplay, PieceDisplayProps};
@@ -37,27 +37,27 @@ pub fn ChessBoard(
         cx,
         <>
             <link rel="stylesheet" href="chess_board.css"/>
-        <div class="chess-board">
-            <For
-                each=squares
-                key=|sqr| sqr.0.to_string()
-                view=move |cx, (sqr, piece, may_move)| {
-                    let even = (sqr.rank() + sqr.file()) % 2 == 0;
-                    view! {
-                        cx,
-                        <div class="square" class:dark=even>
-                            <PieceDisplay
-                                piece=piece
-                                square=sqr
-                                board_reversed=reverse_board
-                                may_move=may_move
-                                make_move=make_move
-                            />
-                        </div>
+            <div class="chess-board">
+                <For
+                    each=squares
+                    key=|sqr| sqr.0.to_string()
+                    view=move |cx, (sqr, piece, may_move)| {
+                        let even = (sqr.rank() + sqr.file()) % 2 == 0;
+                        view! {
+                            cx,
+                            <div class="square" class:dark=even>
+                                <PieceDisplay
+                                    piece=piece
+                                    square=sqr
+                                    board_reversed=reverse_board
+                                    may_move=may_move
+                                    make_move=make_move
+                                />
+                            </div>
+                        }
                     }
-                }
-            />
-        </div>
+                />
+            </div>
         </>
     }
 }
