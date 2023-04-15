@@ -35,6 +35,8 @@ pub fn ChessBoard(
 
     view! {
         cx,
+        <>
+            <link rel="stylesheet" href="chess_board.css"/>
         <div class="chess-board">
             <For
                 each=squares
@@ -56,5 +58,6 @@ pub fn ChessBoard(
                 }
             />
         </div>
+        </>
     }
 }
