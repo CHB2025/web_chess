@@ -9,4 +9,6 @@ members = [
 name = "web_chess"
 bin-package = "server"
 lib-package = "frontend"
+lib-features = ["hydrate"]
 assets-dir = "assets"
+style-file = "styles/style.scss"

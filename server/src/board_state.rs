@@ -1,17 +1,20 @@
-use chb_chess::{Move, Board};
-use tokio::sync::{broadcast::{self, Sender, Receiver}, Mutex, MutexGuard};
+use chb_chess::{Board, Move};
+use tokio::sync::{
+    broadcast::{self, Receiver, Sender},
+    RwLock, RwLockReadGuard,
+};
 
 pub struct BoardState {
-    board: Mutex<Board>,
-    channel: Sender<Move>
+    board: RwLock<Board>,
+    channel: Sender<Move>,
 }
 
 impl BoardState {
     pub fn init() -> Self {
         let (channel, _) = broadcast::channel(1);
         BoardState {
-            board: Mutex::new(Board::default()),
-            channel
+            board: RwLock::new(Board::default()),
+            channel,
         }
     }
 
@@ -19,12 +22,16 @@ impl BoardState {
         self.channel.subscribe()
     }
 
-    pub async fn board(&self) -> MutexGuard<Board> {
-        self.board.lock().await
+    pub async fn board(&self) -> RwLockReadGuard<Board> {
+        self.board.read().await
+    }
+
+    pub async fn fen(&self) -> String {
+        self.board().await.to_fen()
     }
 
     pub async fn make(&self, mv: Move) {
-        if self.board.lock().await.make(mv).is_ok() {
+        if self.board.write().await.make(mv).is_ok() {
             let _ = self.channel.send(mv);
         }
     }

@@ -1,13 +1,20 @@
 use chb_chess::Color;
-use leptos::{component, create_signal, event_target_value, view, IntoView, Scope, Signal};
+use leptos::*;
+use leptos_router::use_params_map;
 use web_sys::Event;
 
-use crate::board_provider::create_server_board;
+use crate::board_provider::get_board;
 use crate::chess_board::{ChessBoard, ChessBoardProps};
 
 #[component]
 pub fn Play(cx: Scope) -> impl IntoView {
-    let (board, make_move) = create_server_board(cx);
+    let params = use_params_map(cx);
+
+    let (board, make_move) = get_board(
+        cx,
+        params.with(|p| p.get("id").cloned().unwrap_or("1".to_owned())),
+    );
+
     let (play_as, set_play_as) = create_signal(cx, Some(Color::White));
     let view_as = Signal::derive(cx, move || play_as().unwrap_or(Color::White));
     let change_player = move |e: Event| {

@@ -1,15 +1,14 @@
 use async_std::channel::{unbounded, Receiver};
 
 use chb_chess::{Board, Move};
-use leptos::{
-    create_signal, log, spawn_local, ReadSignal, Scope, SignalSetter, SignalUpdate, WriteSignal,
-};
+use leptos::*;
 use wasm_bindgen::{prelude::Closure, JsCast};
 use web_sys::{MessageEvent, WebSocket};
 
 pub type Provider = (ReadSignal<Board>, SignalSetter<Move>);
 
-pub fn create_server_board(cx: Scope) -> Provider {
+pub fn get_board(cx: Scope, id: String) -> Provider {
+    log!("id={id}");
     let (board, set_board) = create_signal(cx, Board::default());
     let (local_tx, local_rx) = unbounded::<Move>();
 
@@ -20,12 +19,12 @@ pub fn create_server_board(cx: Scope) -> Provider {
         };
     });
 
-    spawn_local(start_board_sync(set_board, local_rx));
+    spawn_local(start_board_sync(set_board, id, local_rx));
     (board, make_move)
 }
 
-async fn start_board_sync(set_board: WriteSignal<Board>, rx: Receiver<Move>) {
-    let ws = match WebSocket::new("ws://localhost:3000/board/subscribe") {
+async fn start_board_sync(set_board: WriteSignal<Board>, id: String, rx: Receiver<Move>) {
+    let ws = match WebSocket::new(&format!("ws://localhost:3000/api/board/{id}/subscribe")) {
         Ok(w) => w,
         Err(e) => {
             log!("Error connecting to websocket: {:?}", e);
@@ -38,7 +37,6 @@ async fn start_board_sync(set_board: WriteSignal<Board>, rx: Receiver<Move>) {
             let txt: String = txt.into();
             match txt.split_once(':') {
                 Some(("fen", f)) => {
-                    log!("Not yet handling initialization. Received fen:\n{f}");
                     if let Ok(b) = f.trim().parse::<Board>() {
                         set_board(b);
                     }
@@ -46,7 +44,6 @@ async fn start_board_sync(set_board: WriteSignal<Board>, rx: Receiver<Move>) {
                 Some(("move", m)) if m.trim().parse::<Move>().is_ok() => {
                     set_board.update(|b| {
                         if b.make(m.trim().parse().expect("Validated")).is_err() {
-                            // Board out of sync somehow
                             log!("BOARD OUT OF SYNC!");
                         }
                     });

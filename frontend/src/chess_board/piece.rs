@@ -1,8 +1,5 @@
 use chb_chess::{Dir, Move, Piece, Square};
-use leptos::{
-    component, create_signal, event_target, log, use_context, view, IntoSignal, IntoView,
-    ReadSignal, Scope, Signal, SignalWith,
-};
+use leptos::*;
 use web_sys::{HtmlDivElement, MouseEvent};
 
 #[component]
