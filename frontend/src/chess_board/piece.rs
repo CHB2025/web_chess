@@ -27,7 +27,7 @@ where
         Piece::Filled(kind, color) => format!("{}{}", color, kind),
         Piece::Empty => "empty".to_owned(),
     };
-    let style = move || {
+    let transformation = move || {
         if held() {
             translate.with(|(x, y)| format!("transform: translate({x}px, {y}px)"))
         } else {
@@ -86,7 +86,7 @@ where
         <div
             class=move || format!("piece kind-{}", class())
             class:held=held
-            prop:style=style
+            prop:style=transformation
             on:mousedown=mouse_down
             on:mouseup=mouse_up
         />

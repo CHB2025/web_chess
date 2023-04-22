@@ -1,9 +1,10 @@
+use cfg_if::cfg_if;
 use leptos::{component, create_signal, provide_context, view, IntoView, Scope};
 use leptos_meta::*;
 use leptos_router::*;
+use routes::home::*;
 use routes::play::*;
 use web_sys::MouseEvent;
-use cfg_if::cfg_if;
 
 mod board_provider;
 mod chess_board;
@@ -27,7 +28,7 @@ pub fn App(cx: Scope) -> impl IntoView {
             <Router>
                 <main on:mousemove=mouse_move>
                     <Routes>
-                        <Route path="/" view=move |cx| view! {cx, <div>"Hello world"</div>}/>
+                        <Route path="/" view=move |cx| view! {cx, <Home/>}/>
                         <Route path="play" view=move |cx| view! {cx, <Play/>}/>
                         <Route path="play/:id" view=move |cx| view! {cx,  <Play/>}/>
                     </Routes>
@@ -43,6 +44,8 @@ cfg_if! {
 
         #[wasm_bindgen]
         pub fn hydrate() {
+            _ = console_log::init_with_level(log::Level::Debug);
+            console_error_panic_hook::set_once();
             leptos::mount_to_body(move |cx| {
                 view! {cx, <App/>}
             });

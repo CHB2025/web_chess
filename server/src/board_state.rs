@@ -10,6 +10,14 @@ pub struct BoardState {
 }
 
 impl BoardState {
+    pub fn new(board: Board) -> Self {
+        let (channel, _) = broadcast::channel(1);
+        BoardState {
+            board: RwLock::new(board),
+            channel,
+        }
+    }
+
     pub fn init() -> Self {
         let (channel, _) = broadcast::channel(1);
         BoardState {
