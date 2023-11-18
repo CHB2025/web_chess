@@ -1,0 +1,8 @@
+[package]
+name="api"
+version="0.1.0"
+edition="2021"
+
+[dependencies]
+chb_chess = {git = "https://github.com/CHB2025/chess.git", features = ["serde"]}
+serde = { version = "1.0.160", features = ["derive"] }

@@ -3,16 +3,17 @@ use leptos::*;
 use leptos_router::use_params_map;
 use web_sys::Event;
 
-use crate::board_provider::get_board;
+use crate::board_provider::play_board;
 use crate::chess_board::{ChessBoard, ChessBoardProps};
 
 #[component]
 pub fn Play(cx: Scope) -> impl IntoView {
     let params = use_params_map(cx);
 
-    let (board, make_move) = get_board(
+    let (board, make_move) = play_board(
         cx,
         params.with(|p| p.get("id").cloned().unwrap_or("1".to_owned())),
+        Color::White,
     );
 
     let (play_as, set_play_as) = create_signal(cx, Some(Color::White));

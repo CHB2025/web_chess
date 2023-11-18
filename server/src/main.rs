@@ -2,21 +2,26 @@ use std::{collections::HashMap, sync::Arc};
 
 use axum::routing::post;
 use axum::{routing::get, Extension, Router};
-use board_state::BoardState;
 use frontend::{App, AppProps};
+use game::Game;
 use leptos::{get_configuration, log, view};
 use leptos_axum::{generate_route_list, LeptosRoutes};
-use tokio::sync::RwLock;
+use tokio::sync::{Mutex, RwLock};
 
 use crate::routes::board::{create_board, get_board};
-use crate::{fallback::file_handler, routes::board::subscribe_to_board};
+use crate::{
+    fallback::file_handler,
+    routes::board::{join_board, subscribe_to_board},
+};
 
-mod board_state;
 mod code_gen;
 mod fallback;
+mod game;
+mod participant;
 mod routes;
+mod session;
 
-type BoardList = Arc<RwLock<HashMap<String, Arc<BoardState>>>>;
+type BoardList = Arc<RwLock<HashMap<String, Arc<Mutex<Game>>>>>;
 
 #[tokio::main]
 async fn main() {
@@ -34,6 +39,7 @@ async fn main() {
         .route("/board/:id", get(get_board))
         .route("/board/create", post(create_board))
         .route("/board/:id/subscribe", get(subscribe_to_board))
+        .route("/board/join/:id/:play_as", get(join_board))
         .with_state(state);
 
     let app = Router::new()
